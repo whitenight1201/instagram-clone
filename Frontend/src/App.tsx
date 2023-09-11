@@ -1,9 +1,10 @@
 import "./App.css";
+import Routers from "./routes/Router";
 
 function App() {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen">
-      Hello
+    <div className="flex justify-center items-center w-full h-screen text-base bg-neutral-900 text-neutral-200">
+      <Routers />
     </div>
   );
 }
