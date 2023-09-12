@@ -1,9 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import HomePageLayout from "../components/Layout/HomePageLayout";
+
 import PageLogin from "../containers/PageLogin/PageLogin";
 import PageSignUp from "../containers/PageSignUp/PageSignUp";
+import HomePage from "../containers/PageHome/";
+import PageNotFound from "../containers/PageNotFound/PageNotFound";
 
-import { LOGIN, REGISTER} from "./routes";
+import { PrivateRoute } from "./PrivateRoute";
+
+import { HOME, LOGIN, REGISTER } from "./routes";
 
 function Routers() {
   return (
@@ -12,6 +18,16 @@ function Routers() {
         <Route path={LOGIN} element={<PageLogin />} />
         <Route path={REGISTER} element={<PageSignUp />} />
 
+        <Route
+          path={HOME}
+          element={
+            <PrivateRoute layout={HomePageLayout}>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
   );
