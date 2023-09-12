@@ -17,8 +17,8 @@ export const login = (email: string, password: string) => {
       password,
     })
     .then((response) => {
-      if (response.data.msg) {
-        localStorage.setItem("x-auth-token", JSON.stringify(response.data.msg));
+      if (response.data.accessToken) {
+        localStorage.setItem("token", response.data.accessToken);
       }
 
       return response.data;
@@ -26,11 +26,11 @@ export const login = (email: string, password: string) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("x-auth-token") ;
+  localStorage.removeItem("token") ;
 };
 
 export const getCurrentUser = () => {
-  const userStr = localStorage.getItem("x-auth-token");
+  const userStr = localStorage.getItem("token");
   if (userStr) return JSON.parse(userStr);
 
   return null;

@@ -1,15 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import { IUser } from "../../types/user";
-import { register } from "../../services/auth.service";
+import { register } from "../../store/slices/auth";
+import { clearMessage, setMessage } from "../../store/slices/message";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const RegisterPage: React.FC = () => {
-  const [successful, setSuccessful] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
   const navigate = useNavigate();
+  const [successful, setSuccessful] = useState<boolean>(false);
+  
+  const { message } = useAppSelector((state: any) => state.message);
+  const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
   const initialValues: IUser = {
     username: "",
@@ -42,24 +50,41 @@ const RegisterPage: React.FC = () => {
   const handleRegister = (formValue: IUser) => {
     const { username, email, password } = formValue;
 
-    register(username, email, password).then(
-      (response) => {
-        setMessage(response.data.message);
-        setSuccessful(true);
-        navigate("/login");
-      },
-      (error) => {
-        const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+    const data: IUser = {
+      username: username,
+      email: email,
+      password: password,
+    };
 
-        setMessage(resMessage);
-        setSuccessful(false);
-      }
-    );
+    dispatch(register(data))
+      .unwrap()
+      .then(
+        () => {
+          setSuccessful(true);
+          // navigate("/login");
+        },
+        (error: any) => {
+          setSuccessful(false);
+        }
+      );
+    // register(username, email, password).then(
+    //   (response) => {
+    //     setMessage(response.data.message);
+    //     setSuccessful(true);
+    //     // navigate("/login");
+    //   },
+    //   (error) => {
+    //     const resMessage =
+    //       (error.response &&
+    //         error.response.data &&
+    //         error.response.data.message) ||
+    //       error.message ||
+    //       error.toString();
+
+    //     setMessage(resMessage);
+    //     setSuccessful(false);
+    //   }
+    // );
   };
 
   return (
@@ -141,12 +166,12 @@ const RegisterPage: React.FC = () => {
             )}
 
             {message && (
-              <div className="flex ">
+              <div className="flex w-full justify-center items-center">
                 <div
                   className={
                     successful
-                      ? "text-sm w-full tex-green-500"
-                      : "text-sm w-full text-red-500"
+                      ? "text-sm text-green-500"
+                      : "text-sm text-red-500"
                   }
                   role="alert"
                 >
