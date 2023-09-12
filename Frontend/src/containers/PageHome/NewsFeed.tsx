@@ -1,6 +1,6 @@
 import React from "react";
-import PostContainer from "../../components/PostContainer/PostContainer";
-import Story from "../../components/limb/story";
+import PostContainer from "../PostContainer/PostContainer";
+import Story from "../../components/story";
 import { storiesData } from "../../database";
 
 const NewsFeed: React.FC = () => {

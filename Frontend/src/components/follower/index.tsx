@@ -1,5 +1,5 @@
 import React from "react";
-import { IFollow } from "../../../types/follwer";
+import { IFollow } from "../../types/follwer";
 interface IProps {
   follower: IFollow;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { IStory } from "../../../types/story";
+import { IStory } from "../../types/story";
 
 interface IProps {
   story: IStory;

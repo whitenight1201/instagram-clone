@@ -1,6 +1,6 @@
 import React from 'react';
-import MainContentContainer from '../../common/MainContentContainer';
-import Navbar from '../limb/navbar';
+import MainContentContainer from '../common/MainContentContainer';
+import Navbar from '../components/navbar';
 
 interface IProps {
   children?: React.ReactNode;

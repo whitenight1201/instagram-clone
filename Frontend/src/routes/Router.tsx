@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import HomePageLayout from "../components/Layout/HomePageLayout";
+import HomePageLayout from "../layout/HomePageLayout";
 
 import PageLogin from "../containers/PageLogin/PageLogin";
 import PageSignUp from "../containers/PageSignUp/PageSignUp";

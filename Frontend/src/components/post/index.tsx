@@ -1,5 +1,5 @@
 import React from "react";
-import { IPost } from "../../../types/post";
+import { IPost } from "../../types/post";
 import moment from "moment";
 interface IProps {
   post: IPost;
