@@ -1,98 +1,164 @@
-import React, { FC } from "react";
-import facebookSvg from "../../images/Facebook.svg";
-import twitterSvg from "../../images/Twitter.svg";
-import googleSvg from "../../images/Google.svg";
-import Input from "../../shared/Input/Input";
-import ButtonPrimary from "../../shared/Button/ButtonPrimary";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
-export interface PageSignUpProps {
-  className?: string;
-}
+import { IUser } from "../../types/user";
+import { register } from "../../services/auth.service";
 
-const loginSocials = [
-  {
-    name: "Continue with Facebook",
-    href: "#",
-    icon: facebookSvg,
-  },
-  {
-    name: "Continue with Twitter",
-    href: "#",
-    icon: twitterSvg,
-  },
-  {
-    name: "Continue with Google",
-    href: "#",
-    icon: googleSvg,
-  },
-];
+const RegisterPage: React.FC = () => {
+  const [successful, setSuccessful] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const navigate = useNavigate();
 
-const PageSignUp: FC<PageSignUpProps> = () => {
+  const initialValues: IUser = {
+    username: "",
+    email: "",
+    password: "",
+  };
+
+  const validationSchema = Yup.object().shape({
+    username: Yup.string()
+      .test(
+        "len",
+        "The username must be between 3 and 20 characters.",
+        (val: any) =>
+          val && val.toString().length >= 3 && val.toString().length <= 20
+      )
+      .required("This field is required!"),
+    email: Yup.string()
+      .email("This is not a valid email.")
+      .required("This field is required!"),
+    password: Yup.string()
+      .test(
+        "len",
+        "The password must be between 6 and 40 characters.",
+        (val: any) =>
+          val && val.toString().length >= 6 && val.toString().length <= 40
+      )
+      .required("This field is required!"),
+  });
+
+  const handleRegister = (formValue: IUser) => {
+    const { username, email, password } = formValue;
+
+    register(username, email, password).then(
+      (response) => {
+        setMessage(response.data.message);
+        setSuccessful(true);
+        navigate("/login");
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        setMessage(resMessage);
+        setSuccessful(false);
+      }
+    );
+  };
+
   return (
-    <div className="container mb-24 lg:mb-32">
-      <h2 className="mb-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-100 justify-center">
-        Signup
-      </h2>
-      <div className="max-w-md mx-auto space-y-6 ">
-        <div className="grid gap-3">
-          {loginSocials.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              className=" flex w-full rounded-lg bg-neutral-800 px-4 py-3 transform transition-transform sm:px-6 hover:translate-y-[-2px]"
-            >
-              <img className="flex-shrink-0" src={item.icon} alt={item.name} />
-              <h3 className="flex-grow text-center text-sm font-medium text-neutral-300 sm:text-sm">
-                {item.name}
-              </h3>
-            </a>
-          ))}
+    <div className="flex w-full h-screen items-center justify-center">
+      <div className="flex flex-col w-96 h-auto shadow-lg">
+        <div className="flex justify-center p-6">
+          <img
+            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            alt="profile-img"
+            className="rounded-full p-4"
+          />
         </div>
-        {/* OR */}
-        <div className="relative text-center">
-          <span className="relative z-10 inline-block px-4 font-medium text-sm bg-neutral-900">
-            OR
-          </span>
-          <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-800"></div>
-        </div>
-        {/* FORM */}
-        <form className="grid grid-cols-1 gap-6" action="#" method="post">
-          <label className="block">
-            <span className="text-neutral-200">User Name</span>
-            <Input
-              type="email"
-              placeholder="please enter your name"
-              className="mt-1"
-            />
-          </label>
-          <label className="block">
-            <span className="text-neutral-200">Email address</span>
-            <Input
-              type="email"
-              placeholder="example@example.com"
-              className="mt-1"
-            />
-          </label>
-          <label className="block">
-            <span className="flex justify-between items-center text-neutral-200">
-              Password
-            </span>
-            <Input type="password" className="mt-1" />
-          </label>
-          <ButtonPrimary type="submit">Continue</ButtonPrimary>
-        </form>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleRegister}
+        >
+          <Form>
+            {!successful && (
+              <div>
+                <div className="flex flex-col m-10">
+                  <label htmlFor="username"> Username </label>
+                  <Field
+                    name="username"
+                    type="text"
+                    className="w-full h-10 px-2 border border-gray-300 rounded-md focus:border-primary outline-none"
+                  />
+                  <ErrorMessage
+                    name="username"
+                    component="div"
+                    className="text-sm w-full text-red-500"
+                  />
+                </div>
 
-        {/* ==== */}
-        <span className="block text-center text-neutral-300">
-          Already have an account? {` `}
-          <Link className="text-green-600" to="/login">
-            Sign in
-          </Link>
-        </span>
+                <div className="flex flex-col m-10">
+                  <label htmlFor="email"> Email </label>
+                  <Field
+                    name="email"
+                    type="email"
+                    className="w-full h-10 px-2 border border-gray-300 rounded-md focus:border-primary outline-none"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-sm w-full text-red-500"
+                  />
+                </div>
+
+                <div className="flex flex-col m-10">
+                  <label htmlFor="password"> Password </label>
+                  <Field
+                    name="password"
+                    type="password"
+                    className="w-full h-10 px-2 border border-gray-300 rounded-md focus:border-primary outline-none"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-sm w-full text-red-500"
+                  />
+                </div>
+
+                <div className="flex w-full h-full p-10">
+                  <button
+                    type="submit"
+                    className="flex w-full h-10 justify-center items-center rounded-md font-semibold text-xl text-white bg-primary"
+                  >
+                    Sign Up
+                  </button>
+                </div>
+                {/* ==== */}
+                <span className="block text-center text-neutral-700">
+                  Already have an account? {` `}
+                  <Link className="text-green-600" to="/login">
+                    Sign in
+                  </Link>
+                </span>
+              </div>
+            )}
+
+            {message && (
+              <div className="flex ">
+                <div
+                  className={
+                    successful
+                      ? "text-sm w-full tex-green-500"
+                      : "text-sm w-full text-red-500"
+                  }
+                  role="alert"
+                >
+                  {message}
+                </div>
+              </div>
+            )}
+          </Form>
+        </Formik>
       </div>
     </div>
   );
 };
 
-export default PageSignUp;
+export default RegisterPage;
