@@ -1,6 +1,6 @@
 import React from "react";
 import { followData } from "../../database";
-import Follower from "../../components/follower";
+import Follower from "../../components/Follower";
 
 const RightSidebar: React.FC = () => {
   return (

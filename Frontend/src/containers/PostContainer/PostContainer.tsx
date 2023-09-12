@@ -1,7 +1,7 @@
 import React from 'react';
 import { postsData } from '../../database';
 import { TPostView } from '../../types/post';
-import Post from '../../components/post';
+import Post from '../../components/Post';
 
 interface IProps {
   postsView?: TPostView;
