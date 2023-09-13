@@ -46,7 +46,7 @@ const ProfilePopover = () => {
           <div className="flex flex-col border-b-2 whitespace-none">
             <div
               className="cursor-pointer hover:bg-gray-100 flex items-center space-x-4 px-3 py-2"
-              // onClick={() => history.push(`/${username}`)}
+              onClick={() => navigate("/profile")}
             >
               <OutlineProfile />
               <span style={{ fontSize: ".9rem" }}>Profile</span>

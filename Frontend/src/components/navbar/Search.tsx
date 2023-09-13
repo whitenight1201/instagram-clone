@@ -9,7 +9,7 @@ const Search = (props: SearchProps) => {
   const { searchVal, inputSearch } = props;
 
   return (
-    <div className="flex justify-center relative w-full h-full">
+    <div className="flex justify-center relative w-full h-full mb-2">
       {searchVal === "" && (
         <div className="text-xl z-10 flex justify-center items-center gap-2 text-[#8E8E8E]">
           <FiSearch /> Search
