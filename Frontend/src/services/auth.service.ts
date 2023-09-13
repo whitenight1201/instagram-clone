@@ -3,12 +3,8 @@ import authHeader from "./auth-header";
 
 const API_URL = "http://192.168.3.42:3001/auth/";
 
-export const register = (username: string, email: string, password: string) => {
-  return axios.post(API_URL + "signup", {
-    username,
-    email,
-    password,
-  });
+export const register = (formData: FormData) => {
+  return axios.post(API_URL + "signup", formData);
 };
 
 export const login = (email: string, password: string) => {

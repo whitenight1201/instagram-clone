@@ -1,21 +1,25 @@
-"use client"
+"use client";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "./message";
 
 import AuthService from "../../services/auth.service";
 import { IUser } from "../../types/user";
 
-const user = JSON.parse(localStorage ? JSON.stringify(localStorage.getItem("token")): "");
+const user = JSON.parse(
+  localStorage ? JSON.stringify(localStorage.getItem("token")) : ""
+);
 
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ username, email, password }: IUser, thunkAPI) => {
+  async ({ username, email, password, avatar }: IUser, thunkAPI) => {
     try {
-      const response = await AuthService.register(
-        username,
-        email,
-        password,
-      );
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("avatar", avatar);
+
+      const response = await AuthService.register(formData);
       thunkAPI.dispatch(setMessage(response.data.message));
       return response.data;
     } catch (error: any) {
@@ -35,7 +39,7 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }: IUser, thunkAPI) => {
     try {
-      const response = await AuthService.login(email, password);    
+      const response = await AuthService.login(email, password);
       return { user: response.accessToken };
     } catch (error: any) {
       console.log("async error");

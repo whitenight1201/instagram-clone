@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import ImageUploading, { ImageListType } from "react-images-uploading";
+import ImageUploading, {
+  ImageListType,
+  ImageType,
+} from "react-images-uploading";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -12,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [successful, setSuccessful] = useState<boolean>(false);
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = React.useState<ImageType[]>([]);
 
   const { message } = useAppSelector((state: any) => state.message);
   const dispatch = useAppDispatch();
@@ -24,7 +27,7 @@ const RegisterPage: React.FC = () => {
   ) => {
     // data for submit
     console.log(imageList, addUpdateIndex);
-    setImages(imageList as never[]);
+    setImages(imageList);
   };
 
   useEffect(() => {
@@ -35,6 +38,7 @@ const RegisterPage: React.FC = () => {
     username: "",
     email: "",
     password: "",
+    avatar: {},
   };
 
   const validationSchema = Yup.object().shape({
@@ -60,12 +64,15 @@ const RegisterPage: React.FC = () => {
   });
 
   const handleRegister = (formValue: IUser) => {
-    const { username, email, password} = formValue;
+    const { username, email, password } = formValue;
+
+    const avatar = images[0] !== undefined ? images[0].file : "";
 
     const data: IUser = {
       username: username,
       email: email,
       password: password,
+      avatar: avatar,
     };
 
     dispatch(register(data))
@@ -85,11 +92,6 @@ const RegisterPage: React.FC = () => {
     <div className="flex w-full h-screen items-center justify-center">
       <div className="flex flex-col w-96 h-auto shadow-lg">
         <div className="flex justify-center px-10">
-          {/* <img
-          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-          alt="profile-img"
-          className="rounded-full p-4"
-          /> */}
           <ImageUploading
             multiple
             value={images}
@@ -107,8 +109,8 @@ const RegisterPage: React.FC = () => {
             }) => (
               // write your building UI
               <div className="flex flex-col w-full justify-center items-center gap-y-3">
-  
                 <button
+                  type="submit"
                   className="w-full h-10 justify-center items-center rounded-md font-semibold text-xl text-white bg-green-600 hover:bg-green-700"
                   style={isDragging ? { color: "red" } : undefined}
                   onClick={onImageUpload}
@@ -116,7 +118,7 @@ const RegisterPage: React.FC = () => {
                 >
                   Select Your Avatar
                 </button>
-                
+
                 {imageList.map((image, index) => (
                   <div key={index} className="flex flex-col w-full">
                     <div className="flex justify-center items-center">

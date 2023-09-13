@@ -82,13 +82,13 @@ const LoginPage: React.FC<Props> = () => {
   return (
     <div className="flex w-full h-screen items-center justify-center">
       <div className="flex flex-col w-96 h-auto shadow-lg">
-        <div className="flex justify-center p-6">
+        {/* <div className="flex justify-center p-6">
           <img
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
             alt="profile-img"
             className="rounded-full p-4"
           />
-        </div>
+        </div> */}
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
