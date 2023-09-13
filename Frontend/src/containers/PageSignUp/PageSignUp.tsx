@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import ImageUploading, { ImageListType } from "react-images-uploading";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -11,10 +12,21 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [successful, setSuccessful] = useState<boolean>(false);
-  
+  const [images, setImages] = React.useState([]);
+
   const { message } = useAppSelector((state: any) => state.message);
   const dispatch = useAppDispatch();
-  
+
+  const maxNumber = 69;
+  const onChange = (
+    imageList: ImageListType,
+    addUpdateIndex: number[] | undefined
+  ) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList as never[]);
+  };
+
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
@@ -48,7 +60,7 @@ const RegisterPage: React.FC = () => {
   });
 
   const handleRegister = (formValue: IUser) => {
-    const { username, email, password } = formValue;
+    const { username, email, password} = formValue;
 
     const data: IUser = {
       username: username,
@@ -61,41 +73,78 @@ const RegisterPage: React.FC = () => {
       .then(
         () => {
           setSuccessful(true);
-          // navigate("/login");
+          navigate("/login");
         },
         (error: any) => {
           setSuccessful(false);
         }
       );
-    // register(username, email, password).then(
-    //   (response) => {
-    //     setMessage(response.data.message);
-    //     setSuccessful(true);
-    //     // navigate("/login");
-    //   },
-    //   (error) => {
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-
-    //     setMessage(resMessage);
-    //     setSuccessful(false);
-    //   }
-    // );
   };
 
   return (
     <div className="flex w-full h-screen items-center justify-center">
       <div className="flex flex-col w-96 h-auto shadow-lg">
-        <div className="flex justify-center p-6">
-          <img
-            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-            alt="profile-img"
-            className="rounded-full p-4"
-          />
+        <div className="flex justify-center px-10">
+          {/* <img
+          src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+          alt="profile-img"
+          className="rounded-full p-4"
+          /> */}
+          <ImageUploading
+            multiple
+            value={images}
+            onChange={onChange}
+            maxNumber={maxNumber}
+          >
+            {({
+              imageList,
+              onImageUpload,
+              onImageRemoveAll,
+              onImageUpdate,
+              onImageRemove,
+              isDragging,
+              dragProps,
+            }) => (
+              // write your building UI
+              <div className="flex flex-col w-full justify-center items-center gap-y-3">
+  
+                <button
+                  className="w-full h-10 justify-center items-center rounded-md font-semibold text-xl text-white bg-green-600 hover:bg-green-700"
+                  style={isDragging ? { color: "red" } : undefined}
+                  onClick={onImageUpload}
+                  {...dragProps}
+                >
+                  Select Your Avatar
+                </button>
+                
+                {imageList.map((image, index) => (
+                  <div key={index} className="flex flex-col w-full">
+                    <div className="flex justify-center items-center">
+                      <img
+                        src={image.dataURL}
+                        alt=""
+                        className="rounded-full w-32 h-32"
+                      />
+                    </div>
+                    <div className="flex justify-between px-4">
+                      <button
+                        className="px-3 h-8 rounded-md font-semibold text-xl text-white bg-green-600 hover:bg-green-700"
+                        onClick={() => onImageUpdate(index)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="px-3 h-8 rounded-md font-semibold text-xl text-white bg-green-600 hover:bg-green-700"
+                        onClick={() => onImageRemove(index)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ImageUploading>
         </div>
         <Formik
           initialValues={initialValues}
