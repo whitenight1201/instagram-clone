@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { IPost } from "../../types/post";
+import Comment from "../Comment";
 import moment from "moment";
 interface IProps {
   post: IPost;
@@ -7,15 +8,28 @@ interface IProps {
 
 const Post: React.FC<IProps> = (props) => {
   const { post } = props;
-  const { user } = post;
+  const { author } = post;
+
+  const [commentshownumber, setCommnetshownumber] = useState<number>(2);
+
+  const handleShowAllCommnets = () => {
+    setCommnetshownumber(post.comments.length);
+  };
+
   return (
     <div className="w-full shadow bg-white">
       <div className="flex items-center space-x-5 p-2.5 pl-4">
         <div className="w-10 h-10">
-          <img src={user.dp} className="w-full h-full rounded-full" alt="dp" />
+          <img
+            src={author.avatar}
+            className="w-full h-full rounded-full"
+            alt="dp"
+          />
         </div>
         <div className="flex-grow">
-          <p className="font-semibold text-sm text-gray-700">{user.fullname}</p>
+          <p className="font-semibold text-sm text-gray-700">
+            {author.username}
+          </p>
         </div>
         <div className="w-8 h-8">
           <button className="w-full h-full hover:bg-gray-100 rounded-full text-gray-600 focus:outline-none">
@@ -24,10 +38,10 @@ const Post: React.FC<IProps> = (props) => {
         </div>
       </div>
       {/* Image */}
-      {post.image ? (
+      {post.file ? (
         <div className="w-full h-76 max-h-100">
           <img
-            src={post.image}
+            src={post.file}
             alt="postimage"
             className="w-full h-76 max-h-100 object-cover"
           />
@@ -55,24 +69,38 @@ const Post: React.FC<IProps> = (props) => {
           </div>
         </div>
         {/* Likes */}
-        <div className="flex w-8 h-4 space-x-1">
-          <p>{post.likes}</p>
+        <div className="flex w-8 h-4 space-x-1 pb-6">
+          <p>{post.likecnt}</p>
           <p>Likes</p>
         </div>
-        {/* Comments */}
+        {/* Caption-content */}
         <div className="flex flex-col gap-1">
-          <div className="flex text-sm justify-between pr-4">
-            <p className="font-semibold">{user.fullname}</p>
-            <p className="truncate">
-              Imperdiet in sit rhoncus, eleifend tellus augue lectus potenti
-              pellentesque
+          <div className="flex text-sm justify-between">
+            <p className="font-semibold">{author.username}</p>
+            <p className="felx flex-grow truncate pl-2 text-ellipsis">
+              {post.content}
             </p>
             <button className="flex items-center justify-center hover:bg-gray-100 rounded-lg text-gray-500 focus:outline-none">
               more
             </button>
           </div>
-          <button className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none">
-            View all 100 comments
+        </div>
+        {/* Comment's Show */}
+        <div>
+          <div className="flex flex-col w-full">
+            {post.comments.length ? (
+              post.comments
+                .slice(0, commentshownumber)
+                .map((comment, idx) => <Comment key={idx} comment={comment} />)
+            ) : (
+              <p>No comments yet!</p>
+            )}
+          </div>
+          <button
+            className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none"
+            onClick={handleShowAllCommnets}
+          >
+            View all {post.comments.length} comments
           </button>
         </div>
         {/* Time */}
@@ -89,7 +117,11 @@ const Post: React.FC<IProps> = (props) => {
           src="images/img_emoji.svg"
           alt="Emoji"
         ></img>
-        <input type="text" className="flex-grow focus:outline-none text-gray-500" placeholder="Add a comment..."/>
+        <input
+          type="text"
+          className="flex-grow focus:outline-none text-gray-500"
+          placeholder="Add a comment..."
+        />
         <button className="flex justify-center items-center text-blue-700 hover:font-semibold">
           Post
         </button>
