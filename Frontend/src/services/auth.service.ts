@@ -1,4 +1,5 @@
 import axios from "axios";
+import authHeader from "./auth-header";
 
 const API_URL = "http://192.168.3.42:3001/auth/";
 
@@ -26,7 +27,12 @@ export const login = (email: string, password: string) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("token") ;
+  return axios
+    .get(API_URL + "logout", { headers: authHeader() })
+    .then((response) => {
+      localStorage.removeItem("token");
+      return response.data;
+    });
 };
 
 export const getCurrentUser = () => {
