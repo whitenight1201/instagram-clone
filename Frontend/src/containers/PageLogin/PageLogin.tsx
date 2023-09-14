@@ -59,37 +59,11 @@ const LoginPage: React.FC<Props> = () => {
           setLoading(false);
         }
       );
-
-    // login(email, password).then(
-    //   () => {
-    //     navigate("/");
-    //     window.location.reload();
-    //   },
-    //   (error) => {
-    //     // console.log("~~~~~~~~~~"+ error.response.data.message);
-    //     const resMessage =
-    //       (error.response &&
-    //         error.response.data &&
-    //         error.response.data.message) ||
-    //       error.message ||
-    //       error.toString();
-
-    //     setLoading(false);
-    //     setMessage(resMessage);
-    //   }
-    // );
   };
 
   return (
     <div className="flex w-full h-screen items-center justify-center">
       <div className="flex flex-col w-96 h-auto shadow-lg">
-        {/* <div className="flex justify-center p-6">
-          <img
-            src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-            alt="profile-img"
-            className="rounded-full p-4"
-          />
-        </div> */}
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -124,15 +98,18 @@ const LoginPage: React.FC<Props> = () => {
               />
             </div>
 
-            <div className="flex w-full h-full p-10">
-              <button
-                type="submit"
-                className="flex w-full h-10 justify-center items-center rounded-md font-semibold text-xl text-white bg-primary"
-                disabled={loading}
-              >
-                {loading && <Spinner />}
-                <span>Login</span>
-              </button>
+            <div className="flex items-center justify-center w-full h-full p-10">
+              {loading ? (
+                <Spinner />
+              ) : (
+                <button
+                  type="submit"
+                  className="flex w-full h-10 justify-center items-center rounded-md font-semibold text-xl text-white bg-primary"
+                  disabled={loading}
+                >
+                  <span>Login</span>
+                </button>
+              )}
             </div>
 
             {/* ==== */}
