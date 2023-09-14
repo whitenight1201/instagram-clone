@@ -6,7 +6,7 @@ import OutlineProfile from "../Icons/OutlineProfile";
 import OutlineBookmark from "../Icons/OutlineBookmark";
 import OutlineSetting from "../Icons/OutlineSetting";
 import OutlineSwitch from "../Icons/OutlineSwitch";
-import {logout} from "../../store/slices/auth";
+import { logout } from "../../store/slices/auth";
 import { useAppDispatch } from "../../store/hooks";
 
 const ProfilePopover = () => {
@@ -22,7 +22,7 @@ const ProfilePopover = () => {
           navigate("/");
           window.location.reload();
         },
-        (error : any) => {
+        (error: any) => {
           // add show error message logic
           // console.log(error.message);
         }
@@ -31,8 +31,12 @@ const ProfilePopover = () => {
 
   return (
     <Popover className="relative">
-      <Popover.Button className="h-8 w-8 bg-gray-300 uppercase rounded-full">
-        {/* {username.slice(0, 1)} */}
+      <Popover.Button className="flex items-center h-7 w-7">
+        <img
+          src="images/img_smallpost_293x293.png"
+          className="rounded-full"
+          alt="my avtar"
+        ></img>
       </Popover.Button>
       <Transition
         leave="transition duration-300"
