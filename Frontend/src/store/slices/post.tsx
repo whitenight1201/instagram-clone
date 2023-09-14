@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import PostService from "../../services/post.service";
 import { IPostData } from "../../types/post";
 
@@ -45,7 +45,7 @@ const postsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        // console.log("~~~~~~~~~~~~~~~~~~~currentPage, hasmore, payloadlen: " + state.currentPage, state.hasMore, action.payload.length);
+        console.log("~~~~~~~~~~~~~~~~~~~currentPage, hasmore, payloadlen: " + state.currentPage, state.hasMore, action.payload.length);
         state.loading = false;
         if (action.payload.length > 0) {
           state.posts = [...state.posts, ...action.payload];
@@ -57,7 +57,7 @@ const postsSlice = createSlice({
         }
       })
       .addCase(fetchPosts.rejected, (state, action) => {
-        state.loading = true;
+        state.loading = false;
       });
   },
 });

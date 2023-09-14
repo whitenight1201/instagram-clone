@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const NewsFeed: React.FC = () => {
   const dispatch = useAppDispatch();
+
   const { posts, currentPage, loading, hasMore } = useAppSelector(
     (state) => state.posts
   );
@@ -38,7 +39,7 @@ const NewsFeed: React.FC = () => {
       </div>
 
       {/* All posts */}
-      <PostContainer postsView="listView" postsData={posts} loading={loading}/>
+      <PostContainer postsView="listView" postsData={posts} loading={loading} />
     </div>
   );
 };

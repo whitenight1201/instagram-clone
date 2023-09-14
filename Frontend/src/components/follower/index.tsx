@@ -10,7 +10,7 @@ const Follower: React.FC<IProps> = (props) => {
   return (
     <div className="flex w-full items-center">
       <div className="w-8 h-8 mr-3">
-        <img src={user.dp} className="rounded-full"></img>
+        <img src={user.dp} className="rounded-full" alt="avatar"></img>
       </div>
       <div className="flex-grow flex flex-col">
         <p className="text-sm font-normal text-black">{user.username}</p>

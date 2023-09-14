@@ -1,4 +1,3 @@
-import { IPost } from '../types/post';
 import { IPostData } from '../types/post';
 
 import { IStory } from '../types/story';

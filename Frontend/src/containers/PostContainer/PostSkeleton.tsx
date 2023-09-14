@@ -1,21 +1,18 @@
 import React from "react";
-
+import "./PostSkeleton.css";
 const PostSkeleton = () => {
   return (
-    <div className="flex flex-col w-full lg:h-[500px] md:h-[400px] sm:h-[300px] h-200px shadow bg-white animate-pulse ">
+    <div className="flex flex-col w-full lg:h-[500px] md:h-[400px] sm:h-[300px] h-200px shadow bg-white ">
       {/* Author Title */}
-      <div className="flex justify-between items-center w-full h-[8%] border-b-[1px] border-gray-100 pl-4">
-        <div className="rounded-full bg-slate-200 w-8 h-8 space-x-4"></div>
-        <div className="w-full h-8 mx-5 rounded-md bg-slate-200"></div>
-      </div>
+      <div className="skeletonimage animate-shine w-full h-[8%] border-b-2 border-gray-100 bg-slate-200"></div>
       {/* Image */}
-      <div className="w-full h-[70%] border-b-[1px] border-gray-100 bg-slate-400"></div>
+      <div className="skeletonimage animate-shine w-full h-[70%] border-b-2 border-gray-100"></div>
 
       {/* Icons, Likes, Comments, Time */}
-      <div className="w-full h-[14%] border-b-[1px] border-gray-100 bg-slate-200"></div>
+      <div className="skeletonimage animate-shine w-full h-[14%] border-b-2 border-gray-100"></div>
 
       {/* Add Comment */}
-      <div className="w-full h-[8%] border-b-[1px] border-gray-100 bg-slate-200"></div>
+      <div className="skeletonimage animate-shine w-full h-[8%] border-b-2 border-gray-100"></div>
     </div>
   );
 };
