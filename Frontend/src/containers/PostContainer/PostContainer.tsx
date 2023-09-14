@@ -1,14 +1,17 @@
 import React from "react";
-import { IPostData, TPostView } from "../../types/post";
 import Post from "../../components/Post";
+import PostSkeleton from "./PostSkeleton";
+
+import { IPostData, TPostView } from "../../types/post";
 
 interface IProps {
   postsView?: TPostView;
   postsData: IPostData[];
+  loading: boolean;
 }
 
 const PostContainer: React.FC<IProps> = (props) => {
-  const { postsView, postsData } = props;
+  const { postsView, postsData, loading } = props;
 
   return (
     <div className="w-full h-full">
@@ -20,7 +23,16 @@ const PostContainer: React.FC<IProps> = (props) => {
         {postsData.length ? (
           postsData.map((post, idx) => <Post key={idx} postData={post} />)
         ) : (
-          <p>No posts yet!</p>
+          <>{!loading ? <p>No posts yet!</p> : <p></p>}</>
+        )}
+
+        {/* Placeholder output for the following pages*/}
+        {loading && (
+          <>
+            {[...Array(5)].map((_, index) => (
+              <PostSkeleton key={index} />
+            ))}
+          </>
         )}
       </div>
     </div>

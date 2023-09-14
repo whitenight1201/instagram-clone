@@ -57,7 +57,7 @@ const postsSlice = createSlice({
         }
       })
       .addCase(fetchPosts.rejected, (state, action) => {
-        state.loading = false;
+        state.loading = true;
       });
   },
 });

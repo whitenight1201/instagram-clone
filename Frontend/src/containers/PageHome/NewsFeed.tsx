@@ -38,7 +38,7 @@ const NewsFeed: React.FC = () => {
       </div>
 
       {/* All posts */}
-      <PostContainer postsView="listView" postsData={posts} />
+      <PostContainer postsView="listView" postsData={posts} loading={loading}/>
     </div>
   );
 };
