@@ -6,6 +6,7 @@ import OutlineHome from "../Icons/OutlineHome";
 
 import Search from "./Search";
 import ProfilePopover from "./ProfilePopover";
+import OutlineAdd from "../Icons/OutlineAdd";
 
 export default function Navbar() {
   const [searchVal, setSearchVal] = useState("");
@@ -42,13 +43,9 @@ export default function Navbar() {
               alt="Messenger"
             />
           </Link>
-          <Link to="/newpost">
-            <img
-              className="h-[22px]"
-              src="images/img_newpost.svg"
-              alt="New Post"
-            />
-          </Link>
+          <div className="cursor-pointer">
+            <OutlineAdd />
+          </div>
           <Link to="/findpeople">
             <img
               className="h-[22px]"

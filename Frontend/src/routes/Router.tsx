@@ -7,10 +7,9 @@ import PageSignUp from "../containers/PageSignUp/PageSignUp";
 import PageProfile from "../containers/PageProfile/PageProfile";
 import HomePage from "../containers/PageHome/";
 import PageNotFound from "../containers/PageNotFound/PageNotFound";
-
 import { PrivateRoute } from "./PrivateRoute";
 
-import { HOME, LOGIN, REGISTER, PROFILE } from "./routes";
+import { HOME, LOGIN, REGISTER, PROFILE} from "./routes";
 
 function Routers() {
   return (
