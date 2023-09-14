@@ -1,16 +1,16 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-export const getallposts = (pagenum: number, pagecnt: number) => {
+export const fetchposts = (pagenum: number) => {
   return axios
-    .get(process.env.REACT_APP_BASE_URL + "posts/all", { headers: authHeader(), params:{pagenum, pagecnt} })
+    .get(process.env.REACT_APP_BASE_URL + `posts/all?pagenum=${pagenum}&pagecnt=5`, { headers: authHeader() })
     .then((response) => {
-      return response.data;
+      return response;
     });
 };
 
 const PostService = {
-  getallposts,
+  fetchposts
 };
 
 export default PostService;
