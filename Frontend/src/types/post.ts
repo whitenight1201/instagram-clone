@@ -1,19 +1,31 @@
 export type TPostView = 'gridView' | 'listView';
-import { IComment } from "./comment";
 export interface IPost {
   _id: string;
   content: string;
   author: {
     _id: string;
     username: string;
-    avatar?: string;
+    avatar?: any;
   };
   file?: any;
   likecnt: number;
-  comments: IComment[];
-  shares: number;
+  liketype?: boolean;
+  // comments: IComment[];
+  // shares: number;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IComment {
+  _id: string,
+  commentary: string,
+  post: string,
+  user:{
+    _id:string,
+    username:string
+  },
+  createdAt: Date,
+  updatedAt: Date,
 }
 
 export interface IPostData {

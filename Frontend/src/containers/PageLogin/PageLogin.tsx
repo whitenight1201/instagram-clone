@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { login } from "../../store/slices/auth";
 import { clearMessage, setMessage } from "../../store/slices/message";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { Spinner } from "../../shared/Spinner";
 
 type Props = {};
 
@@ -13,10 +14,10 @@ const LoginPage: React.FC<Props> = () => {
   let navigate: NavigateFunction = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(false);
-    
+
   const { message } = useAppSelector((state: any) => state.message);
   const dispatch = useAppDispatch();
-  
+
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
@@ -45,7 +46,7 @@ const LoginPage: React.FC<Props> = () => {
     const data: any = {
       email: email,
       password: password,
-    };  
+    };
 
     dispatch(login(data))
       .unwrap()
@@ -129,9 +130,7 @@ const LoginPage: React.FC<Props> = () => {
                 className="flex w-full h-10 justify-center items-center rounded-md font-semibold text-xl text-white bg-primary"
                 disabled={loading}
               >
-                {loading && (
-                  <span className="spinner-border spinner-border-sm"> Loading...</span>
-                )}
+                {loading && <Spinner />}
                 <span>Login</span>
               </button>
             </div>

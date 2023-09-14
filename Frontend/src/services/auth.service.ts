@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = "http://192.168.3.42:3001/auth/";
+const API_URL = process.env.REACT_APP_BASE_URL + "auth/";
 
 export const register = (formData: FormData) => {
   return axios.post(API_URL + "signup", formData);

@@ -1,5 +1,5 @@
 import React from "react";
-import { IComment } from "../../types/comment";
+import { IComment } from "../../types/post";
 
 interface IProps {
   comment: IComment;

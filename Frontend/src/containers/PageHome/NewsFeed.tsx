@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PostContainer from "../PostContainer/PostContainer";
 import Story from "../../components/Story";
 import { storiesData } from "../../database";
+import { IPostData} from "../../types/post";
+import { getallposts } from "../../services/post.service";
 
 const NewsFeed: React.FC = () => {
+  const [postsData, setPostData] = useState<IPostData[]>([]);
+
+  useEffect(() => {
+    getallposts(1, 10).then((response) => {
+      console.log("data: ", response);
+      setPostData(response);
+    });
+  }, []);
+
   return (
     <div className="w-full h-full">
       {/* Story Section */}
@@ -14,7 +25,7 @@ const NewsFeed: React.FC = () => {
       </div>
 
       {/* All posts */}
-      <PostContainer postsView="listView"/>
+      <PostContainer postsView="listView" postsData={postsData} />
     </div>
   );
 };

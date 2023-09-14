@@ -9,7 +9,7 @@ import * as Yup from "yup";
 
 import { IUser } from "../../types/user";
 import { register } from "../../store/slices/auth";
-import { clearMessage, setMessage } from "../../store/slices/message";
+import { clearMessage } from "../../store/slices/message";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const RegisterPage: React.FC = () => {
@@ -121,11 +121,11 @@ const RegisterPage: React.FC = () => {
 
                 {imageList.map((image, index) => (
                   <div key={index} className="flex flex-col w-full">
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center w-32 h-32 rounded-full overflow-hidden mx-auto">
                       <img
                         src={image.dataURL}
                         alt=""
-                        className="rounded-full w-32 h-32"
+                        className="object-cover h-full"
                       />
                     </div>
                     <div className="flex justify-between px-4">

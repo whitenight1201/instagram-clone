@@ -1,14 +1,15 @@
-import React from 'react';
-import { postsData1 } from '../../database';
-import { TPostView } from '../../types/post';
-import Post from '../../components/Post';
+import React from "react";
+import { IPostData, TPostView } from "../../types/post";
+import Post from "../../components/Post";
 
 interface IProps {
   postsView?: TPostView;
+  postsData: IPostData[];
 }
 
 const PostContainer: React.FC<IProps> = (props) => {
-  const { postsView } = props;
+  const { postsView, postsData } = props;
+
   return (
     <div className="w-full h-full">
       <div
@@ -16,8 +17,8 @@ const PostContainer: React.FC<IProps> = (props) => {
           postsView === "gridView" ? "grid-cols-2" : "grid-cols-1"
         } gap-2`}
       >
-        {postsData1.length ? (
-          postsData1.map((post, idx) => <Post key={idx} post={post} />)
+        {postsData.length ? (
+          postsData.map((post, idx) => <Post key={idx} postData={post} />)
         ) : (
           <p>No posts yet!</p>
         )}

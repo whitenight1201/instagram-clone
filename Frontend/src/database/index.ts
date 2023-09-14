@@ -1,4 +1,6 @@
 import { IPost } from '../types/post';
+import { IPostData } from '../types/post';
+
 import { IStory } from '../types/story';
 import { IFollow } from '../types/follwer';
 
@@ -50,17 +52,22 @@ export const followData: IFollow[] = [
   }
 ]
 
-export const postsData1: IPost[] = [
+export const postsData: IPostData[] = [
   {
-    _id: '1',
-    content: 'Imperdiet in sit rhoncus, eleifend tellus augue lectus potentipellentesqueadsfasdfffffffffffffasdf',
-    author: {
+    post: {
       _id: '1',
-      username: 'terrylucas',
-      avatar: 'images/img_smallpost_1x292.png',
+      content: 'Imperdiet in sit rhoncus, eleifend tellus augue lectus potentipellentesqueadsfasdfffffffffffffasdf',
+      author: {
+        _id: '1',
+        username: 'terrylucas',
+        avatar: 'images/img_smallpost_1x292.png',
+      },
+      file: 'images/img_smallpost_1x292.png',
+      likecnt: 129,
+      // shares: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-    file: 'images/img_smallpost_1x292.png',
-    likecnt: 129,
     comments: [
       {
         _id: 'comments"id1',
@@ -106,36 +113,40 @@ export const postsData1: IPost[] = [
         createdAt: new Date(),
         updatedAt: new Date(),
       }
-    ],
-    shares: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    ]
   },
   {
-    _id: '2',
-    content: 'write you caption',
-    author: {
-      _id: '1',
-      username: 'shirleyromero',
-      avatar: 'images/img_smallpost_293x293.png',
+    post: {
+      _id: '2',
+      content: 'write you caption',
+      author: {
+        _id: '1',
+        username: 'shirleyromero',
+        avatar: 'images/img_smallpost_293x293.png',
+      },
+      file: 'images/img_smallpost_293x293.png',
+      likecnt: 798,
+      // shares: 10,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-    file: 'images/img_smallpost_293x293.png',
-    likecnt: 798,
-    comments: [],
-    shares: 10,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    comments: []
   },
   {
-    _id: '3',
-    content: 'write you caption',
-    author: {
-      _id: '1',
-      username: 'ednamanz',
-      avatar: 'images/img_smallpost_1.png',
+    post: {
+      _id: '3',
+      content: 'write you caption',
+      author: {
+        _id: '1',
+        username: 'ednamanz',
+        avatar: 'images/img_smallpost_1.png',
+      },
+      file: 'images/img_smallpost_1.png',
+      likecnt: 456,
+      // shares: 80,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-    file: 'images/img_smallpost_1.png',
-    likecnt: 456,
     comments: [
       {
         _id: 'comments"id1',
@@ -158,28 +169,50 @@ export const postsData1: IPost[] = [
         },
         createdAt: new Date(),
         updatedAt: new Date(),
-      }
-    ],
-    shares: 80,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+      },
+    ]
   },
-  // {
-  //   _id: '4',
-  //   content:'write you caption',
-  //   author: {
-  //     _id: '1',
-  //     username: 'lauramatthews',
-  //     avatar: 'images/img_smallpost.png',
-  //   },
-  //   file: 'images/img_smallpost.png',
-  //   likecnt: 29,
-  //   comments: 1,
-  //   shares: 2,
-  //   createdAt: new Date(),
-  //   updatedAt: new Date(),
-  // },
-];
+  {
+    post: {
+      _id: '3',
+      content: 'write you caption',
+      author: {
+        _id: '1',
+        username: 'ednamanz',
+        avatar: 'images/img_smallpost_1.png',
+      },
+      file: '',
+      likecnt: 456,
+      // shares: 80,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    comments: [
+      {
+        _id: 'comments"id1',
+        commentary: 'this is a test aa',
+        post: 'post id1',
+        user: {
+          _id: "commenter's id",
+          username: "commenter's nameaa"
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        _id: 'comments"id2',
+        commentary: 'this is a test bb',
+        post: 'post id2',
+        user: {
+          _id: "commenter's id",
+          username: "commenter's namebb"
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]
+  },
+]
 
 export const storiesData: IStory[] = [
   {
