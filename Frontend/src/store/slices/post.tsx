@@ -31,6 +31,7 @@ export interface IPostsList {
   currentPage: number;
   hasMore: boolean;
   loading: boolean;
+  showhidepostpanel: boolean;
 }
 
 const initialState: IPostsList = {
@@ -38,6 +39,7 @@ const initialState: IPostsList = {
   currentPage: 0,
   hasMore: true,
   loading: true,
+  showhidepostpanel: false,
 };
 
 const postsSlice = createSlice({
@@ -48,6 +50,9 @@ const postsSlice = createSlice({
       state.posts = initialState.posts; // Reset posts to initial value
       state.currentPage = 0;
       state.hasMore = true;
+    },
+    showHidePostModal(state) {
+      state.showhidepostpanel = !state.showhidepostpanel;
     },
   },
   extraReducers: (builder) => {
@@ -77,14 +82,16 @@ const postsSlice = createSlice({
       .addCase(addPost.fulfilled, (state, action) => {
         state.currentPage = 0;
         state.loading = false;
+        state.showhidepostpanel = !state.showhidepostpanel;
       })
       .addCase(addPost.rejected, (state, action) => {
         state.loading = false;
       });
   },
 });
+
 const { reducer, actions } = postsSlice;
 
-export const { resetPosts } = actions;
+export const { resetPosts, showHidePostModal} = actions;
 
 export default reducer;

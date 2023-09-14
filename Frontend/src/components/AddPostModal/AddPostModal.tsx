@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CancelIcon from "@material-ui/icons/Cancel";
 import TelegramIcon from "@material-ui/icons/Telegram";
 import { useAppDispatch } from "../../store/hooks";
-import { addPost } from "../../store/slices/post";
+import { addPost, showHidePostModal } from "../../store/slices/post";
 
 const AddPostModal: React.FC = () => {
   const [src, setSrc] = useState("");
@@ -29,8 +29,13 @@ const AddPostModal: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full h-screen items-center justify-center bg-gray-200 opacity-90 z-10">
-      <CancelIcon className="absolute top-10 right-10 text-white cursor-pointer" />
+    <div className="flex w-full h-screen items-center justify-center bg-black bg-opacity-30">
+      <div
+        onClick={() => dispatch(showHidePostModal())}
+        className="absolute top-10 right-10 text-white cursor-pointer"
+      >
+        <CancelIcon style={{fontSize: '40px'}}/>
+      </div>
       <form className="flex flex-col items-center justify-evenly h-1/3 bg-white shadow-sm px-5">
         <header>
           <p className="mb-3 text-2xl font-semibold">New Post</p>
