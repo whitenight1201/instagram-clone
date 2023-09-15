@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import PostService from "../../services/post.service";
-import { IPostData } from "../../types/post";
+import { ICommentaryParms, IPost, IPostData } from "../../types/post";
 
 export const fetchPosts = createAsyncThunk(
   "posts/all",
@@ -19,6 +19,18 @@ export const addPost = createAsyncThunk(
   async (postdata: FormData, { rejectWithValue }) => {
     try {
       const response = await PostService.addpost(postdata);
+      return response;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const addComment = createAsyncThunk(
+  "commentaries/add",
+  async ({ post_id, commentary }: ICommentaryParms, { rejectWithValue }) => {
+    try {
+      const response = await PostService.addcomment(post_id, commentary);
       return response;
     } catch (err: any) {
       return rejectWithValue(err.response.data);
@@ -82,9 +94,24 @@ const postsSlice = createSlice({
       .addCase(addPost.fulfilled, (state, action) => {
         state.currentPage = 0;
         state.loading = false;
+        state.posts.unshift({ post: { ...action.payload }, comments: [] });
         state.showhidepostpanel = !state.showhidepostpanel;
       })
       .addCase(addPost.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(addComment.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.currentPage = 0;
+        state.loading = false;
+        const updataIdx = state.posts.findIndex(
+          (x) => x.post._id === action.payload.post
+        );
+        state.posts[updataIdx].comments?.unshift({ ...action.payload });
+      })
+      .addCase(addComment.rejected, (state, action) => {
         state.loading = false;
       });
   },
@@ -92,6 +119,6 @@ const postsSlice = createSlice({
 
 const { reducer, actions } = postsSlice;
 
-export const { resetPosts, showHidePostModal} = actions;
+export const { resetPosts, showHidePostModal } = actions;
 
 export default reducer;

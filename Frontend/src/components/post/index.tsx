@@ -1,19 +1,36 @@
 import React, { useState } from "react";
-import { IPostData } from "../../types/post";
+
 import Comment from "../Comment";
 import moment from "moment";
+import { addComment } from "../../store/slices/post";
+import { useAppDispatch } from "../../store/hooks";
+
+import { ICommentaryParms, IPostData } from "../../types/post";
+
 interface IProps {
   postData: IPostData;
 }
 
 const Post: React.FC<IProps> = (props) => {
+  const [commentshownumber, setCommnetshownumber] = useState<number>(2);
+  const [commentValue, setCommentValue] = useState<string>("");
+  const dispatch = useAppDispatch();
+
   const { postData } = props;
   const { author } = postData.post;
 
-  const [commentshownumber, setCommnetshownumber] = useState<number>(2);
-
   const handleShowAllCommnets = () => {
     setCommnetshownumber(postData.comments.length);
+  };
+
+  const handleAddComment = () => {
+    const commentaryparms: ICommentaryParms = {
+      post_id: postData.post._id,
+      commentary: commentValue,
+    };
+    if (commentValue !== "") {
+      dispatch(addComment(commentaryparms));
+    }
   };
 
   return (
@@ -134,10 +151,15 @@ const Post: React.FC<IProps> = (props) => {
           type="text"
           className="flex-grow focus:outline-none text-gray-500"
           placeholder="Add a comment..."
+          value={commentValue}
+          onChange={(e) => setCommentValue(e.target.value)}
         />
-        <button className="flex justify-center items-center text-blue-700 hover:font-semibold">
+        <div
+          className="flex justify-center items-center text-blue-700 hover:font-semibold cursor-pointer"
+          onClick={handleAddComment}
+        >
           Post
-        </button>
+        </div>
       </div>
     </div>
   );

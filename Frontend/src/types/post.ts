@@ -32,3 +32,9 @@ export interface IPostData {
   post: IPost;
   comments: IComment[]
 }
+
+
+export interface ICommentaryParms {
+  post_id: string;
+  commentary: string;
+}

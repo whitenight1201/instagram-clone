@@ -22,9 +22,24 @@ export const addpost = (postdata: FormData) => {
     });
 };
 
+export const addcomment = (post_id: string, commentary: string) => {
+  return axios
+    .post(
+      process.env.REACT_APP_BASE_URL + `commentaries/${post_id}`,
+      {commentary},
+      {
+        headers: authHeader(),
+      }
+    )
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const PostService = {
   fetchposts,
   addpost,
+  addcomment,
 };
 
 export default PostService;
