@@ -7,11 +7,12 @@ export interface IPost {
     username: string;
     avatar?: any;
   };
-  file?: any;
+  filename?: any;
+  type:string,
   likecnt: number;
   liketype?: boolean;
-  selectpostcommentflag?:boolean;
   selectpostlikeflag?:boolean;
+  commentcnt:number;
   // comments: IComment[];
   // shares: number;
   createdAt: Date;

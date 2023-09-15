@@ -19,23 +19,22 @@ interface IProps {
 }
 
 const Post: React.FC<IProps> = (props) => {
-  const [commentshownumber, setCommnetshownumber] = useState<number>(3);
   const [commentValue, setCommentValue] = useState<string>("");
   const [likeFlag, setLikeFlag] = useState<boolean>(false);
-  const [showComments, setShowComments] = useState<boolean>(false);
-
+  const [showAllComments, setShowAllComments] = useState<boolean>(false);
+  
   const dispatch = useAppDispatch();
   const { likeordislike } = useAppSelector((state) => state.posts);
-
+  
   const { postData } = props;
   const { author } = postData.post;
-
+  const defaultcommentshownumber: number = 3;
 
   const handleClickShowAll = () => {
-    if (!showComments) {
+    if (!showAllComments) {
       dispatch(fetchComments(postData.post._id));
     }
-    setShowComments(!showComments);
+    setShowAllComments(!showAllComments);
   };
 
   const handleAddComment = () => {
@@ -46,6 +45,7 @@ const Post: React.FC<IProps> = (props) => {
     if (commentValue !== "") {
       dispatch(addComment(commentaryparms));
     }
+    setCommentValue("");
   };
 
   const handleLikeToPost = () => {
@@ -61,6 +61,7 @@ const Post: React.FC<IProps> = (props) => {
 
   return (
     <div className="w-full shadow bg-white">
+      {/* Stories */}
       <div className="flex items-center space-x-5 p-2.5 pl-4">
         {author.avatar ? (
           <div className="w-10 h-10">
@@ -92,10 +93,10 @@ const Post: React.FC<IProps> = (props) => {
         </div>
       </div>
       {/* Image */}
-      {postData.post.file ? (
+      {postData.post.filename ? (
         <div className="w-full max-h-100">
           <img
-            src={process.env.REACT_APP_BASE_URL + postData.post.file}
+            src={process.env.REACT_APP_BASE_URL + postData.post.filename}
             alt="postimage"
             className="w-full h-76 max-h-100 object-cover"
           />
@@ -151,26 +152,26 @@ const Post: React.FC<IProps> = (props) => {
         {/* Comment's Show */}
         <div>
           <div className="flex flex-col w-full">
-            {postData.comments.length > 0 ? (
+            {postData.post.commentcnt > 0 ? (
               postData.comments
                 .slice(
                   0,
-                  showComments ? postData.comments.length : commentshownumber
+                  showAllComments ? postData.post.commentcnt : defaultcommentshownumber
                 )
                 .map((comment, idx) => <Comment key={idx} comment={comment} />)
             ) : (
               <p className="text-sm text-gray-400">No comments yet!</p>
             )}
           </div>
-          {postData.comments.length > 0 ? (
+          {postData.post.commentcnt > defaultcommentshownumber ? (
             <div className="flex justify-between">
               <button
                 className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none"
                 onClick={handleClickShowAll}
               >
-                {showComments
+                {showAllComments
                   ? `Hide all `
-                  : `Show all ` + postData.comments.length + " comments"}
+                  : `Show all ` + postData.post.commentcnt + " comments"}
               </button>
             </div>
           ) : (
