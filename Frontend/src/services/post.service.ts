@@ -22,11 +22,21 @@ export const addpost = (postdata: FormData) => {
     });
 };
 
+export const fetchcomments = (post_id: string) => {
+  return axios
+    .get(process.env.REACT_APP_BASE_URL + `commentaries/${post_id}`, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return { respdata: response.data, post_id };
+    });
+};
+
 export const addcomment = (post_id: string, commentary: string) => {
   return axios
     .post(
       process.env.REACT_APP_BASE_URL + `commentaries/${post_id}`,
-      {commentary},
+      { commentary },
       {
         headers: authHeader(),
       }
@@ -39,6 +49,7 @@ export const addcomment = (post_id: string, commentary: string) => {
 const PostService = {
   fetchposts,
   addpost,
+  fetchcomments,
   addcomment,
 };
 

@@ -31,10 +31,6 @@ export default function Navbar() {
     setSearchVal(value);
   };
 
-  const handlePostShow = () => {
-    dispatch(showHidePostModal());
-  };
-
   return (
     <div className="grid grid-cols-12 fixed z-50 top-0 left-0 xl:px-[25%] lg:px-[20%] md:px-[15%] px-[7%] w-full h-[53px] bg-white border-b-2 border-b-[#DBDBDB] pt-3">
       <div className="flex justify-start col-span-4">
@@ -63,7 +59,10 @@ export default function Navbar() {
               <OutlineMessenger />
             )}
           </div>
-          <div className="cursor-pointer" onClick={handlePostShow}>
+          <div
+            className="cursor-pointer"
+            onClick={() => dispatch(showHidePostModal())}
+          >
             {showhidepostpanel ? <FillAdd /> : <OutlineAdd />}
           </div>
           <div

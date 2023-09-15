@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import PostService from "../../services/post.service";
-import { ICommentaryParms, IPost, IPostData } from "../../types/post";
+import { ICommentaryParms, IPostData } from "../../types/post";
 
 export const fetchPosts = createAsyncThunk(
   "posts/all",
@@ -26,6 +26,18 @@ export const addPost = createAsyncThunk(
   }
 );
 
+export const fetchComments = createAsyncThunk(
+  "commentaries/all",
+  async (post_id: string, { rejectWithValue }) => {
+    try {
+      const response = await PostService.fetchcomments(post_id);
+      return response;
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const addComment = createAsyncThunk(
   "commentaries/add",
   async ({ post_id, commentary }: ICommentaryParms, { rejectWithValue }) => {
@@ -44,6 +56,7 @@ export interface IPostsList {
   hasMore: boolean;
   loading: boolean;
   showhidepostpanel: boolean;
+  showhideallcomment: boolean;
 }
 
 const initialState: IPostsList = {
@@ -52,6 +65,7 @@ const initialState: IPostsList = {
   hasMore: true,
   loading: true,
   showhidepostpanel: false,
+  showhideallcomment: false,
 };
 
 const postsSlice = createSlice({
@@ -66,10 +80,12 @@ const postsSlice = createSlice({
     showHidePostModal(state) {
       state.showhidepostpanel = !state.showhidepostpanel;
     },
+    showHideAllComment(state) {
+      state.showhideallcomment = !state.showhideallcomment;
+    }
   },
   extraReducers: (builder) => {
     builder
-      // FETCHING ALL POSTS
       .addCase(fetchPosts.pending, (state) => {
         state.loading = true;
       })
@@ -85,9 +101,10 @@ const postsSlice = createSlice({
           state.hasMore = false;
         }
       })
-      .addCase(fetchPosts.rejected, (state, action) => {
+      .addCase(fetchPosts.rejected, (state) => {
         state.loading = false;
-      })
+      });
+    builder
       .addCase(addPost.pending, (state) => {
         state.loading = true;
       })
@@ -97,9 +114,27 @@ const postsSlice = createSlice({
         state.posts.unshift({ post: { ...action.payload }, comments: [] });
         state.showhidepostpanel = !state.showhidepostpanel;
       })
-      .addCase(addPost.rejected, (state, action) => {
+      .addCase(addPost.rejected, (state) => {
         state.loading = false;
+      });
+    builder
+      .addCase(fetchComments.pending, (state) => {
+        state.loading = true;
       })
+      .addCase(fetchComments.fulfilled, (state, action) => {
+        state.currentPage = 0;
+        state.loading = false;
+        const updataIdx = state.posts.findIndex(
+          (x) => x.post._id === action.payload.post_id
+        );
+        // state.posts[updataIdx].comments.push(...action.payload);
+        const deletecnt = state.posts[updataIdx].comments.length;
+        state.posts[updataIdx].comments.splice(0, deletecnt, ...action.payload.respdata);
+      })
+      .addCase(fetchComments.rejected, (state) => {
+        state.loading = false;
+      });
+    builder
       .addCase(addComment.pending, (state) => {
         state.loading = true;
       })
@@ -111,7 +146,7 @@ const postsSlice = createSlice({
         );
         state.posts[updataIdx].comments?.unshift({ ...action.payload });
       })
-      .addCase(addComment.rejected, (state, action) => {
+      .addCase(addComment.rejected, (state) => {
         state.loading = false;
       });
   },
@@ -119,6 +154,6 @@ const postsSlice = createSlice({
 
 const { reducer, actions } = postsSlice;
 
-export const { resetPosts, showHidePostModal } = actions;
+export const { resetPosts, showHidePostModal, showHideAllComment } = actions;
 
 export default reducer;

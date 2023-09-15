@@ -2,8 +2,12 @@ import React, { useState } from "react";
 
 import Comment from "../Comment";
 import moment from "moment";
-import { addComment } from "../../store/slices/post";
-import { useAppDispatch } from "../../store/hooks";
+import {
+  addComment,
+  fetchComments,
+  showHideAllComment,
+} from "../../store/slices/post";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 import { ICommentaryParms, IPostData } from "../../types/post";
 
@@ -12,15 +16,18 @@ interface IProps {
 }
 
 const Post: React.FC<IProps> = (props) => {
-  const [commentshownumber, setCommnetshownumber] = useState<number>(2);
+  const [commentshownumber, setCommnetshownumber] = useState<number>(1);
   const [commentValue, setCommentValue] = useState<string>("");
   const dispatch = useAppDispatch();
+  const { showhideallcomment } = useAppSelector((state) => state.posts);
 
   const { postData } = props;
   const { author } = postData.post;
 
   const handleShowAllCommnets = () => {
     setCommnetshownumber(postData.comments.length);
+    dispatch(showHideAllComment());
+    dispatch(fetchComments(postData.post._id));
   };
 
   const handleAddComment = () => {
@@ -118,20 +125,38 @@ const Post: React.FC<IProps> = (props) => {
         {/* Comment's Show */}
         <div>
           <div className="flex flex-col w-full">
-            {postData.comments.length ? (
+            {postData.comments.length > 0 ? (
               postData.comments
                 .slice(0, commentshownumber)
                 .map((comment, idx) => <Comment key={idx} comment={comment} />)
             ) : (
-              <p>No comments yet!</p>
+              <p className="text-sm text-gray-400">No comments yet!</p>
             )}
           </div>
-          <button
-            className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none"
-            onClick={handleShowAllCommnets}
-          >
-            View all {postData.comments.length} comments
-          </button>
+          {postData.comments.length > 0 ? (
+            <div className="flex justify-between">
+              {showhideallcomment ? (
+                <button
+                  className="text-sm hover:text-gray-900 rounded-md text-gray-500 focus:outline-none"
+                  onClick={() => {
+                    setCommnetshownumber(1);
+                    dispatch(showHideAllComment());
+                  }}
+                >
+                  Hide all {postData.comments.length} comments
+                </button>
+              ) : (
+                <button
+                  className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none"
+                  onClick={handleShowAllCommnets}
+                >
+                  View all {postData.comments.length} comments
+                </button>
+              )}
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         {/* Time */}
         <div className="flex-grow pb-4">
