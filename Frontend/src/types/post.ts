@@ -10,6 +10,8 @@ export interface IPost {
   file?: any;
   likecnt: number;
   liketype?: boolean;
+  selectpostcommentflag?:boolean;
+  selectpostlikeflag?:boolean;
   // comments: IComment[];
   // shares: number;
   createdAt: Date;
@@ -37,4 +39,9 @@ export interface IPostData {
 export interface ICommentaryParms {
   post_id: string;
   commentary: string;
+}
+
+export interface ILikePostParms {
+  post_id: string;
+  like: boolean;
 }

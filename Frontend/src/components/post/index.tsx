@@ -1,33 +1,41 @@
 import React, { useState } from "react";
 
+import OutlineFavoriteIcon from "@material-ui/icons/FavoriteBorderRounded";
+import FillFavoriteIcon from "@material-ui/icons/FavoriteRounded";
+
 import Comment from "../Comment";
 import moment from "moment";
 import {
   addComment,
+  addLikeToPost,
   fetchComments,
-  showHideAllComment,
 } from "../../store/slices/post";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
-import { ICommentaryParms, IPostData } from "../../types/post";
+import { ICommentaryParms, ILikePostParms, IPostData } from "../../types/post";
 
 interface IProps {
   postData: IPostData;
 }
 
 const Post: React.FC<IProps> = (props) => {
-  const [commentshownumber, setCommnetshownumber] = useState<number>(1);
+  const [commentshownumber, setCommnetshownumber] = useState<number>(3);
   const [commentValue, setCommentValue] = useState<string>("");
+  const [likeFlag, setLikeFlag] = useState<boolean>(false);
+  const [showComments, setShowComments] = useState<boolean>(false);
+
   const dispatch = useAppDispatch();
-  const { showhideallcomment } = useAppSelector((state) => state.posts);
+  const { likeordislike } = useAppSelector((state) => state.posts);
 
   const { postData } = props;
   const { author } = postData.post;
 
-  const handleShowAllCommnets = () => {
-    setCommnetshownumber(postData.comments.length);
-    dispatch(showHideAllComment());
-    dispatch(fetchComments(postData.post._id));
+
+  const handleClickShowAll = () => {
+    if (!showComments) {
+      dispatch(fetchComments(postData.post._id));
+    }
+    setShowComments(!showComments);
   };
 
   const handleAddComment = () => {
@@ -38,6 +46,17 @@ const Post: React.FC<IProps> = (props) => {
     if (commentValue !== "") {
       dispatch(addComment(commentaryparms));
     }
+  };
+
+  const handleLikeToPost = () => {
+    setLikeFlag(!likeFlag);
+
+    const likepostparam: ILikePostParms = {
+      post_id: postData.post._id,
+      like: likeFlag,
+    };
+
+    dispatch(addLikeToPost(likepostparam));
   };
 
   return (
@@ -89,9 +108,16 @@ const Post: React.FC<IProps> = (props) => {
         {/* Icons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <button className="focus:outline-none flex items-center justify-center w-10 h-10 rounded-full bg-white">
-              <i style={{ fontSize: 24 }} className="fas fa-heart"></i>
-            </button>
+            <div
+              className="focus:outline-none flex items-center justify-center w-10 h-10 rounded-full bg-white"
+              onClick={handleLikeToPost}
+            >
+              {likeordislike && postData.post.selectpostlikeflag ? (
+                <FillFavoriteIcon style={{ color: "red" }} />
+              ) : (
+                <OutlineFavoriteIcon />
+              )}
+            </div>
             <button className="focus:outline-none flex items-center justify-center w-10 h-10 rounded-full bg-white">
               <i style={{ fontSize: 24 }} className="fas fa-comment"></i>
             </button>
@@ -127,7 +153,10 @@ const Post: React.FC<IProps> = (props) => {
           <div className="flex flex-col w-full">
             {postData.comments.length > 0 ? (
               postData.comments
-                .slice(0, commentshownumber)
+                .slice(
+                  0,
+                  showComments ? postData.comments.length : commentshownumber
+                )
                 .map((comment, idx) => <Comment key={idx} comment={comment} />)
             ) : (
               <p className="text-sm text-gray-400">No comments yet!</p>
@@ -135,24 +164,14 @@ const Post: React.FC<IProps> = (props) => {
           </div>
           {postData.comments.length > 0 ? (
             <div className="flex justify-between">
-              {showhideallcomment ? (
-                <button
-                  className="text-sm hover:text-gray-900 rounded-md text-gray-500 focus:outline-none"
-                  onClick={() => {
-                    setCommnetshownumber(1);
-                    dispatch(showHideAllComment());
-                  }}
-                >
-                  Hide all {postData.comments.length} comments
-                </button>
-              ) : (
-                <button
-                  className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none"
-                  onClick={handleShowAllCommnets}
-                >
-                  View all {postData.comments.length} comments
-                </button>
-              )}
+              <button
+                className="flex text-sm hover:bg-gray-100 rounded-md text-gray-500 focus:outline-none"
+                onClick={handleClickShowAll}
+              >
+                {showComments
+                  ? `Hide all `
+                  : `Show all ` + postData.comments.length + " comments"}
+              </button>
             </div>
           ) : (
             <></>

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import PostService from "../../services/post.service";
-import { ICommentaryParms, IPostData } from "../../types/post";
+import { ICommentaryParms, ILikePostParms, IPostData } from "../../types/post";
 
 export const fetchPosts = createAsyncThunk(
   "posts/all",
@@ -50,13 +50,25 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const addLikeToPost = createAsyncThunk(
+  "like/add",
+  async ({ post_id, like }: ILikePostParms, { rejectWithValue }) => {
+    try {
+      const response = await PostService.addliketopost(post_id, like);
+      return { respdata: response, post_id };
+    } catch (err: any) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export interface IPostsList {
   posts: IPostData[];
   currentPage: number;
   hasMore: boolean;
   loading: boolean;
   showhidepostpanel: boolean;
-  showhideallcomment: boolean;
+  likeordislike: boolean;
 }
 
 const initialState: IPostsList = {
@@ -65,7 +77,7 @@ const initialState: IPostsList = {
   hasMore: true,
   loading: true,
   showhidepostpanel: false,
-  showhideallcomment: false,
+  likeordislike: false,
 };
 
 const postsSlice = createSlice({
@@ -79,9 +91,7 @@ const postsSlice = createSlice({
     },
     showHidePostModal(state) {
       state.showhidepostpanel = !state.showhidepostpanel;
-    },
-    showHideAllComment(state) {
-      state.showhideallcomment = !state.showhideallcomment;
+      return;
     }
   },
   extraReducers: (builder) => {
@@ -109,7 +119,6 @@ const postsSlice = createSlice({
         state.loading = true;
       })
       .addCase(addPost.fulfilled, (state, action) => {
-        state.currentPage = 0;
         state.loading = false;
         state.posts.unshift({ post: { ...action.payload }, comments: [] });
         state.showhidepostpanel = !state.showhidepostpanel;
@@ -122,14 +131,17 @@ const postsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchComments.fulfilled, (state, action) => {
-        state.currentPage = 0;
         state.loading = false;
         const updataIdx = state.posts.findIndex(
           (x) => x.post._id === action.payload.post_id
         );
         // state.posts[updataIdx].comments.push(...action.payload);
         const deletecnt = state.posts[updataIdx].comments.length;
-        state.posts[updataIdx].comments.splice(0, deletecnt, ...action.payload.respdata);
+        state.posts[updataIdx].comments.splice(
+          0,
+          deletecnt,
+          ...action.payload.respdata
+        );
       })
       .addCase(fetchComments.rejected, (state) => {
         state.loading = false;
@@ -139,7 +151,6 @@ const postsSlice = createSlice({
         state.loading = true;
       })
       .addCase(addComment.fulfilled, (state, action) => {
-        state.currentPage = 0;
         state.loading = false;
         const updataIdx = state.posts.findIndex(
           (x) => x.post._id === action.payload.post
@@ -149,11 +160,28 @@ const postsSlice = createSlice({
       .addCase(addComment.rejected, (state) => {
         state.loading = false;
       });
+    builder
+      .addCase(addLikeToPost.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addLikeToPost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.likeordislike = !state.likeordislike;
+
+        const updataIdx = state.posts.findIndex(
+          (x) => x.post._id === action.payload.post_id
+        );
+        state.posts[updataIdx].post.selectpostlikeflag = state.likeordislike;
+        state.posts[updataIdx].post.likecnt = action.payload.respdata.likecnt;
+      })
+      .addCase(addLikeToPost.rejected, (state) => {
+        state.loading = false;
+      });
   },
 });
 
 const { reducer, actions } = postsSlice;
 
-export const { resetPosts, showHidePostModal, showHideAllComment } = actions;
+export const { resetPosts, showHidePostModal } = actions;
 
 export default reducer;

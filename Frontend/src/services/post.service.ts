@@ -46,11 +46,26 @@ export const addcomment = (post_id: string, commentary: string) => {
     });
 };
 
+export const addliketopost = (post_id: string, like: boolean) => {
+  return axios
+    .post(
+      process.env.REACT_APP_BASE_URL + `like/${post_id}`,
+      { like },
+      {
+        headers: authHeader(),
+      }
+    )
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const PostService = {
   fetchposts,
   addpost,
   fetchcomments,
   addcomment,
+  addliketopost,
 };
 
 export default PostService;
