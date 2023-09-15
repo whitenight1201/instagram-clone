@@ -217,7 +217,10 @@ const Post: React.FC<IProps> = (props) => {
         </div>
       </div>
       {/* Add Comment */}
-      <div className="flex py-[6px] justify-between px-4 border-t-[1px] border-gray-100">
+      <form
+        className="flex py-[6px] justify-between px-4 border-t-[1px] border-gray-100"
+        onSubmit={handleAddComment}
+      >
         <img
           className="flex w-6 h-6 my-2 mr-4"
           src="images/img_emoji.svg"
@@ -230,13 +233,13 @@ const Post: React.FC<IProps> = (props) => {
           value={commentValue}
           onChange={(e) => setCommentValue(e.target.value)}
         />
-        <div
+        <button
           className="flex justify-center items-center text-blue-700 hover:font-semibold cursor-pointer"
-          onClick={handleAddComment}
+          type="submit"
         >
           Post
-        </div>
-      </div>
+        </button>
+      </form>
     </div>
   );
 };
