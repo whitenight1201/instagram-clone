@@ -1,4 +1,4 @@
-export type TPostView = 'gridView' | 'listView';
+export type TPostView = "gridView" | "listView";
 export interface IPost {
   _id: string;
   content: string;
@@ -8,11 +8,11 @@ export interface IPost {
     avatar?: any;
   };
   filename?: any;
-  type:string,
+  type: string;
+  thumbnailurl: string;
   likecnt: number;
-  liketype?: boolean;
-  selectpostlikeflag?:boolean;
-  commentcnt:number;
+  liketype: boolean;
+  commentcnt: number;
   // comments: IComment[];
   // shares: number;
   createdAt: Date;
@@ -20,22 +20,21 @@ export interface IPost {
 }
 
 export interface IComment {
-  _id: string,
-  commentary: string,
-  post: string,
-  user:{
-    _id:string,
-    username:string
-  },
-  createdAt: Date,
-  updatedAt: Date,
+  _id: string;
+  commentary: string;
+  post: string;
+  user: {
+    _id: string;
+    username: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IPostData {
   post: IPost;
-  comments: IComment[]
+  comments: IComment[];
 }
-
 
 export interface ICommentaryParms {
   post_id: string;

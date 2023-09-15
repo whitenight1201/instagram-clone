@@ -68,7 +68,6 @@ export interface IPostsList {
   hasMore: boolean;
   loading: boolean;
   showhidepostpanel: boolean;
-  likeordislike: boolean;
 }
 
 const initialState: IPostsList = {
@@ -77,7 +76,6 @@ const initialState: IPostsList = {
   hasMore: true,
   loading: true,
   showhidepostpanel: false,
-  likeordislike: false,
 };
 
 const postsSlice = createSlice({
@@ -92,7 +90,7 @@ const postsSlice = createSlice({
     showHidePostModal(state) {
       state.showhidepostpanel = !state.showhidepostpanel;
       return;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -166,12 +164,10 @@ const postsSlice = createSlice({
       })
       .addCase(addLikeToPost.fulfilled, (state, action) => {
         state.loading = false;
-        state.likeordislike = !state.likeordislike;
 
         const updataIdx = state.posts.findIndex(
           (x) => x.post._id === action.payload.post_id
         );
-        state.posts[updataIdx].post.selectpostlikeflag = state.likeordislike;
         state.posts[updataIdx].post.likecnt = action.payload.respdata.likecnt;
       })
       .addCase(addLikeToPost.rejected, (state) => {

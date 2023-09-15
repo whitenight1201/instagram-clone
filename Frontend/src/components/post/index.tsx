@@ -10,7 +10,7 @@ import {
   addLikeToPost,
   fetchComments,
 } from "../../store/slices/post";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { useAppDispatch } from "../../store/hooks";
 
 import { ICommentaryParms, ILikePostParms, IPostData } from "../../types/post";
 
@@ -19,15 +19,15 @@ interface IProps {
 }
 
 const Post: React.FC<IProps> = (props) => {
-  const [commentValue, setCommentValue] = useState<string>("");
-  const [likeFlag, setLikeFlag] = useState<boolean>(false);
-  const [showAllComments, setShowAllComments] = useState<boolean>(false);
-  
-  const dispatch = useAppDispatch();
-  const { likeordislike } = useAppSelector((state) => state.posts);
-  
   const { postData } = props;
   const { author } = postData.post;
+
+  const [commentValue, setCommentValue] = useState<string>("");
+  const [showAllComments, setShowAllComments] = useState<boolean>(false);
+  const [isLiked, setIsLiked] = useState<boolean>(postData.post.liketype);
+
+  const dispatch = useAppDispatch();
+
   const defaultcommentshownumber: number = 3;
 
   const handleClickShowAll = () => {
@@ -49,24 +49,22 @@ const Post: React.FC<IProps> = (props) => {
   };
 
   const handleLikeToPost = () => {
-    setLikeFlag(!likeFlag);
-
     const likepostparam: ILikePostParms = {
       post_id: postData.post._id,
-      like: likeFlag,
+      like: !isLiked,
     };
-
+    setIsLiked(!isLiked);
     dispatch(addLikeToPost(likepostparam));
   };
 
   return (
     <div className="w-full shadow bg-white">
-      {/* Stories */}
+      {/* Avatar */}
       <div className="flex items-center space-x-5 p-2.5 pl-4">
         {author.avatar ? (
           <div className="w-10 h-10">
             <img
-              src={process.env.REACT_APP_BASE_URL + author.avatar}
+              src={process.env.REACT_APP_BASE_URL + "image/" + author.avatar}
               className="w-full h-full rounded-full"
               alt="author"
             />
@@ -93,18 +91,22 @@ const Post: React.FC<IProps> = (props) => {
         </div>
       </div>
       {/* Image */}
-      {postData.post.filename ? (
-        <div className="w-full max-h-100">
+      <div className="w-full max-h-100 relative">
+        {postData.post.filename !== "" && (
           <img
-            src={process.env.REACT_APP_BASE_URL + postData.post.filename}
+            src={
+              postData.post.type === "IMAGE"
+                ? process.env.REACT_APP_BASE_URL + postData.post.filename
+                : process.env.REACT_APP_BASE_URL + postData.post.thumbnailurl
+            }
             alt="postimage"
             className="w-full h-76 max-h-100 object-cover"
           />
-        </div>
-      ) : (
+        )}
+        {postData.post.thumbnailurl !== "" && <button></button>}
         <div className="border-b-[1px] border-gray-100"></div>
-      )}
-
+      </div>
+      {/* {postData.post.thumbnailurl !== "" && <div>hello</div>} */}
       <div className="w-full flex flex-col px-4">
         {/* Icons */}
         <div className="flex items-center justify-between">
@@ -113,7 +115,7 @@ const Post: React.FC<IProps> = (props) => {
               className="focus:outline-none flex items-center justify-center w-10 h-10 rounded-full bg-white"
               onClick={handleLikeToPost}
             >
-              {likeordislike && postData.post.selectpostlikeflag ? (
+              {isLiked ? (
                 <FillFavoriteIcon style={{ color: "red" }} />
               ) : (
                 <OutlineFavoriteIcon />
@@ -156,7 +158,9 @@ const Post: React.FC<IProps> = (props) => {
               postData.comments
                 .slice(
                   0,
-                  showAllComments ? postData.post.commentcnt : defaultcommentshownumber
+                  showAllComments
+                    ? postData.post.commentcnt
+                    : defaultcommentshownumber
                 )
                 .map((comment, idx) => <Comment key={idx} comment={comment} />)
             ) : (
