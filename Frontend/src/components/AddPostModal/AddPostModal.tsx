@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import CancelIcon from "@material-ui/icons/Cancel";
 import TelegramIcon from "@material-ui/icons/Telegram";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { addPost, showHidePostModal } from "../../store/slices/post";
 
 const AddPostModal: React.FC = () => {
   const [src, setSrc] = useState("");
   const [caption, setCaption] = useState<string>("");
   const [type, setType] = useState<string>("");
+
   const dispatch = useAppDispatch();
+  const { showhidepostpanel } = useAppSelector((state) => state.posts);
+
+  const [panelShow, setPanelShow] = useState<boolean>(showhidepostpanel);
 
   const readURL = (input: any) => {
     const [file] = input.files;
@@ -25,18 +29,21 @@ const AddPostModal: React.FC = () => {
     formData.append("type", type);
     formData.append("file", src);
 
-    dispatch(addPost(formData));
+    if (caption) {
+      dispatch(addPost(formData));
+      setPanelShow(!panelShow);
+    }
   };
 
   return (
-    <div className="flex w-full h-screen items-center justify-center bg-black bg-opacity-30">
+    <div className="flex w-full h-screen items-center justify-center bg-black bg-opacity-30 ">
       <div
         onClick={() => dispatch(showHidePostModal())}
         className="absolute top-10 right-10 text-white cursor-pointer"
       >
-        <CancelIcon style={{fontSize: '40px'}}/>
+        <CancelIcon style={{ fontSize: "40px" }} />
       </div>
-      <form className="flex flex-col items-center justify-evenly h-1/3 bg-white shadow-sm px-5">
+      <form className="flex flex-col items-center justify-evenly h-1/2 w-auto bg-white shadow-sm px-5 rounded-md">
         <header>
           <p className="mb-3 text-2xl font-semibold">New Post</p>
         </header>
@@ -49,8 +56,8 @@ const AddPostModal: React.FC = () => {
         <input
           type="text"
           name="content"
-          className="w-full outline-none border-b-2"
-          placeholder="Write a caption..."
+          className="w-full outline-none border-b-2 placeholder:text-red-300"
+          placeholder="Write a caption.."
           value={caption}
           onChange={(e: any) => setCaption(e.target.value)}
         />
@@ -63,7 +70,7 @@ const AddPostModal: React.FC = () => {
           onChange={(e: any) => setType(e.target.value)}
         />
         <div
-          className="flex justify-center items-center text-2xl font-semibold text-white hover:bg-blue-500 hover:scale-105 bg-blue-400 rounded-md w-[80%] cursor-pointer"
+          className="flex justify-center items-center text-2xl font-semibold text-white hover:bg-blue-700 hover:scale-105 bg-blue-600 rounded-md w-[80%] cursor-pointer"
           onClick={share}
         >
           Share <TelegramIcon />

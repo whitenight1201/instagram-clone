@@ -151,9 +151,12 @@ const postsSlice = createSlice({
       .addCase(addComment.fulfilled, (state, action) => {
         state.loading = false;
         const updataIdx = state.posts.findIndex(
-          (x) => x.post._id === action.payload.post
+          (x) => x.post._id === action.payload.comments.post
         );
-        state.posts[updataIdx].comments?.unshift({ ...action.payload });
+        state.posts[updataIdx].post.commentcnt = action.payload.commentcnt;
+        state.posts[updataIdx].comments?.unshift({
+          ...action.payload.comments,
+        });
       })
       .addCase(addComment.rejected, (state) => {
         state.loading = false;

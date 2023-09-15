@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import ReactPlayer from "react-player";
 
 import OutlineFavoriteIcon from "@material-ui/icons/FavoriteBorderRounded";
 import FillFavoriteIcon from "@material-ui/icons/FavoriteRounded";
+import MovieIcon from "@material-ui/icons/MovieOutlined";
 
 import Comment from "../Comment";
 import moment from "moment";
@@ -25,6 +27,7 @@ const Post: React.FC<IProps> = (props) => {
   const [commentValue, setCommentValue] = useState<string>("");
   const [showAllComments, setShowAllComments] = useState<boolean>(false);
   const [isLiked, setIsLiked] = useState<boolean>(postData.post.liketype);
+  const [showVideo, setShowVideo] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
 
@@ -64,7 +67,7 @@ const Post: React.FC<IProps> = (props) => {
         {author.avatar ? (
           <div className="w-10 h-10">
             <img
-              src={process.env.REACT_APP_BASE_URL + "image/" + author.avatar}
+              src={process.env.REACT_APP_BASE_URL + author.avatar}
               className="w-full h-full rounded-full"
               alt="author"
             />
@@ -91,22 +94,46 @@ const Post: React.FC<IProps> = (props) => {
         </div>
       </div>
       {/* Image */}
+
       <div className="w-full max-h-100 relative">
-        {postData.post.filename !== "" && (
-          <img
-            src={
-              postData.post.type === "IMAGE"
-                ? process.env.REACT_APP_BASE_URL + postData.post.filename
-                : process.env.REACT_APP_BASE_URL + postData.post.thumbnailurl
-            }
-            alt="postimage"
-            className="w-full h-76 max-h-100 object-cover"
-          />
+        {postData.post.filename ? (
+          <div>
+            {postData.post.type === "IMAGE" ? (
+              <img
+                src={process.env.REACT_APP_BASE_URL + postData.post.filename}
+                alt="postimage"
+                className="w-full h-76 max-h-100 object-cover"
+              />
+            ) : (
+              <div
+                onMouseEnter={() => setShowVideo(true)}
+                onMouseLeave={() => setShowVideo(false)}
+              >
+                <ReactPlayer
+                  url={process.env.REACT_APP_BASE_URL + postData.post.filename}
+                  controls={showVideo}
+                  width={"100%"}
+                  height={"100%"}
+                  playing={showVideo}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="border-b-[1px] border-gray-100"></div>
         )}
-        {postData.post.thumbnailurl !== "" && <button></button>}
-        <div className="border-b-[1px] border-gray-100"></div>
+
+        {postData.post.type === "VIDEO" && (
+          <div
+            className={`movieicon absolute top-2 right-2 text-white transition-all duration-500 ${
+              showVideo ? "opacity-0" : "opacity-90"
+            } `}
+          >
+            <MovieIcon />
+          </div>
+        )}
       </div>
-      {/* {postData.post.thumbnailurl !== "" && <div>hello</div>} */}
+
       <div className="w-full flex flex-col px-4">
         {/* Icons */}
         <div className="flex items-center justify-between">
@@ -154,7 +181,7 @@ const Post: React.FC<IProps> = (props) => {
         {/* Comment's Show */}
         <div>
           <div className="flex flex-col w-full">
-            {postData.post.commentcnt > 0 ? (
+            {postData.comments.length > 0 ? (
               postData.comments
                 .slice(
                   0,
