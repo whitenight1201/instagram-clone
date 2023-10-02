@@ -115,6 +115,7 @@ const Post: React.FC<IProps> = (props) => {
                   width={"100%"}
                   height={"100%"}
                   playing={showVideo}
+                  loop={true}
                 />
               </div>
             )}
@@ -139,11 +140,11 @@ const Post: React.FC<IProps> = (props) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div
-              className="focus:outline-none flex items-center justify-center w-10 h-10 rounded-full bg-white"
+              className="flex items-center justify-center w-10 h-10 rounded-full bg-white cursor-pointer"
               onClick={handleLikeToPost}
             >
               {isLiked ? (
-                <FillFavoriteIcon style={{ color: "red" }} />
+                <FillFavoriteIcon style={{ color: "tomato" }} />
               ) : (
                 <OutlineFavoriteIcon />
               )}

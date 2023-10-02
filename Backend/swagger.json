@@ -1,0 +1,171 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": { "200": { "description": "" } }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "operationId": "AuthController_signup",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateUserDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["api/auth"]
+      }
+    },
+    "/auth/signin": {
+      "post": {
+        "operationId": "AuthController_signin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["api/auth"]
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["api/auth"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "operationId": "AuthController_refreshTokens",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["api/auth"],
+        "security": [{ "bearer": [] }]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateUserDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["api/users"]
+      },
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["api/users"]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["api/users"]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateUserDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "tags": ["api/users"]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["api/users"]
+      }
+    }
+  },
+  "info": {
+    "title": "Stupid API",
+    "description": "Stupid Api server",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [{ "name": "stupid", "description": "" }],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "in": "header",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["username", "email", "password"]
+      },
+      "AuthDto": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["email", "password"]
+      },
+      "UpdateUserDto": { "type": "object", "properties": {} }
+    }
+  }
+}

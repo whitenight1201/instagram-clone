@@ -11,7 +11,7 @@ const Comment: React.FC<IProps> = (props) => {
   return (
     <div className="flex w-full text-sm">
       <p className="font-semibold text-sm text-gray-700">{user.username}</p>
-      <p className="felx flex-grow truncate pl-2 text-ellipsis">
+      <p className="felx flex-grow pl-2 truncate text-ellipsis">
         {comment.commentary}
       </p>
     </div>
